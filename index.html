@@ -1,72 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ninemeid Hiro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HiroNime</title>
 
 <style>
 body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
-.header{padding:15px;font-size:22px;font-weight:bold}
+.header{padding:15px;font-size:20px;font-weight:bold}
 .search{margin:10px;padding:10px;width:90%;border-radius:8px;border:none}
-
-.card{
- background:#1e1e1e;
- margin:10px;
- border-radius:12px;
- overflow:hidden;
-}
-
-.card img{
- width:100%;
- height:180px;
- object-fit:cover;
-}
-
-.card-content{
- padding:10px;
-}
-
-.btn{
- background:#ff2e63;
- padding:8px;
- border-radius:8px;
- margin-top:8px;
- text-align:center;
-}
-
-.nav{
- position:fixed;
- bottom:0;
- width:100%;
- display:flex;
- background:#111;
-}
-
-.nav div{
- flex:1;
- text-align:center;
- padding:10px;
-}
-
+.card{background:#1e1e1e;margin:10px;padding:15px;border-radius:10px}
+.btn{background:#ff2e63;padding:8px;border-radius:8px;margin-top:8px;text-align:center}
+.nav{position:fixed;bottom:0;width:100%;display:flex;background:#111}
+.nav div{flex:1;text-align:center;padding:10px}
 .hidden{display:none}
-
-iframe{
- width:100%;
- height:200px;
- border:none;
-}
+img{width:100%;border-radius:10px}
 </style>
 </head>
 
 <body>
 
-<div class="header">🔥 Ninemeid Hiro</div>
+<div class="header">🔥 HiroNime</div>
 
 <!-- LOGIN -->
 <div id="login">
-<h2>Login</h2>
-<input id="u" placeholder="Username (hiro)"><br><br>
-<input type="password" placeholder="bebas"><br><br>
+<input id="u" type="email" placeholder="Email"><br><br>
+<input id="p" type="password" placeholder="Password"><br><br>
 <button onclick="login()">Login</button>
 </div>
 
@@ -78,27 +36,21 @@ iframe{
 <div id="home">
 
 <div class="card" data-name="rezero">
-<img src="https://i.imgur.com/3ZQ3Z4Z.jpg">
-<div class="card-content">
-<h3 onclick="detail('Re:Zero','Anime sedih brutal','https://www.youtube.com/embed/ETWPtIfesyA')">Re:Zero</h3>
+<img src="https://picsum.photos/400/200">
+<h3 onclick="detail('Re:Zero','Anime isekai sedih')">Re:Zero</h3>
 <div class="btn" onclick="fav('Re:Zero')">❤️ Favorit</div>
-</div>
 </div>
 
 <div class="card" data-name="aot">
-<img src="https://i.imgur.com/oYiTqum.jpg">
-<div class="card-content">
-<h3 onclick="detail('Attack on Titan','Anime perang','https://www.youtube.com/embed/MGRm4IzK1SQ')">Attack on Titan</h3>
+<img src="https://picsum.photos/401/200">
+<h3 onclick="detail('Attack on Titan','Anime perang brutal')">Attack on Titan</h3>
 <div class="btn" onclick="fav('AOT')">❤️ Favorit</div>
-</div>
 </div>
 
 <div class="card" data-name="kimetsu">
-<img src="https://i.imgur.com/tXK7bXy.jpg">
-<div class="card-content">
-<h3 onclick="detail('Demon Slayer','Anime keren','https://www.youtube.com/embed/VQGCKyvzIM4')">Demon Slayer</h3>
+<img src="https://picsum.photos/402/200">
+<h3 onclick="detail('Demon Slayer','Anime action keren')">Demon Slayer</h3>
 <div class="btn" onclick="fav('Kimetsu')">❤️ Favorit</div>
-</div>
 </div>
 
 </div>
@@ -107,7 +59,6 @@ iframe{
 <div id="detail" class="hidden">
 <h2 id="dTitle"></h2>
 <p id="dDesc"></p>
-<iframe id="video"></iframe>
 <div class="btn" onclick="back()">⬅️ Kembali</div>
 </div>
 
@@ -128,32 +79,34 @@ iframe{
 
 <script>
 function login(){
- var u=document.getElementById("u").value;
- if(u.toLowerCase()=="hiro"){
+ let email = document.getElementById("u").value;
+ let pass = document.getElementById("p").value;
+
+ if(email === "Ruruwanggy@gmail.com" && pass === "ruru"){
   document.getElementById("login").style.display="none";
   document.getElementById("app").classList.remove("hidden");
+ } else {
+  alert("Login gagal");
  }
 }
 
-function detail(t,d,v){
+function detail(t,d){
  document.getElementById("home").classList.add("hidden");
  document.getElementById("detail").classList.remove("hidden");
  document.getElementById("dTitle").innerText=t;
  document.getElementById("dDesc").innerText=d;
- document.getElementById("video").src=v;
 }
 
 function back(){
  document.getElementById("detail").classList.add("hidden");
  document.getElementById("home").classList.remove("hidden");
- document.getElementById("video").src="";
 }
 
 function fav(name){
- var f=JSON.parse(localStorage.getItem("fav")||"[]");
- if(f.indexOf(name)==-1) f.push(name);
- localStorage.setItem("fav",JSON.stringify(f));
- alert("Favorit ditambah");
+ let f = JSON.parse(localStorage.getItem("fav")||"[]");
+ f.push(name);
+ localStorage.setItem("fav", JSON.stringify(f));
+ alert("Ditambah ke favorit");
 }
 
 function show(page){
@@ -164,21 +117,21 @@ function show(page){
 }
 
 function showFav(){
- var f=JSON.parse(localStorage.getItem("fav")||"[]");
- alert("Favorit:\n"+f.join("\n"));
+ let f = JSON.parse(localStorage.getItem("fav")||"[]");
+ alert("Favorit: "+f.join(", "));
 }
 
 function searchAnime(q){
- var cards=document.querySelectorAll(".card");
- for(var i=0;i<cards.length;i++){
-  if(cards[i].dataset.name.indexOf(q.toLowerCase())!=-1){
-   cards[i].style.display="block";
+ let cards = document.querySelectorAll(".card");
+ cards.forEach(c=>{
+  if(c.dataset.name.includes(q.toLowerCase())){
+    c.style.display="block";
   }else{
-   cards[i].style.display="none";
+    c.style.display="none";
   }
- }
+ });
 }
 </script>
 
 </body>
-  </html>
+</html>
