@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HiroNime</title>
 
 <style>
 body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
-.header{padding:15px;font-size:20px;background:#111}
+
+/* HEADER */
+.header{padding:15px;font-size:20px;font-weight:bold}
+
+/* SEARCH */
 .search{margin:10px;padding:10px;width:90%;border-radius:8px;border:none}
+
+/* CARD */
 .card{background:#1e1e1e;margin:10px;padding:15px;border-radius:10px}
-.btn{background:#ff2e63;padding:8px;border-radius:8px;margin-top:8px;text-align:center}
+.card img{width:100%;border-radius:10px}
+
+/* BUTTON */
+.btn{background:#ff2e63;padding:10px;border-radius:8px;margin-top:8px;text-align:center}
+
+/* NAVBAR */
 .nav{position:fixed;bottom:0;width:100%;display:flex;background:#111}
 .nav div{flex:1;text-align:center;padding:10px}
-.hidden{display:none}
-img{width:100%;border-radius:10px}
 
 /* SIDEBAR */
 #sidebar{
@@ -23,10 +32,13 @@ img{width:100%;border-radius:10px}
  width:250px;
  height:100%;
  background:#111;
- padding:20px;
+ padding:15px;
  transition:0.3s;
  z-index:999;
 }
+
+/* HIDDEN */
+.hidden{display:none}
 </style>
 </head>
 
@@ -34,20 +46,22 @@ img{width:100%;border-radius:10px}
 
 <!-- SIDEBAR -->
 <div id="sidebar">
-  <h2>🔥 HiroNime</h2>
-  <p onclick="show('home')">🏠 Home</p>
-  <p onclick="showFav()">❤️ Favorit</p>
-  <p onclick="show('profile')">👤 Profile</p>
-  <p onclick="premium()">👑 Premium</p>
+<h3>🔥 Menu</h3>
+<p onclick="show('home')">🏠 Home</p>
+<p onclick="showFav()">❤️ Favorit</p>
+<p onclick="show('profile')">👤 Profile</p>
+<p onclick="upgrade()">💎 Premium</p>
 </div>
 
+<button onclick="toggleMenu()" style="position:fixed;top:10px;left:10px;">☰</button>
+
 <!-- HEADER -->
-<div class="header" onclick="toggleMenu()">☰ HiroNime</div>
+<div class="header">🔥 HiroNime</div>
 
 <!-- LOGIN -->
 <div id="login">
-<input id="u" type="email" placeholder="Email"><br><br>
-<input id="p" type="password" placeholder="Password"><br><br>
+<input id="u" placeholder="User"><br>
+<input id="p" type="password" placeholder="Pass"><br>
 <button onclick="login()">Login</button>
 </div>
 
@@ -56,12 +70,21 @@ img{width:100%;border-radius:10px}
 
 <input class="search" placeholder="Cari anime..." onkeyup="searchAnime(this.value)">
 
+<!-- HOME -->
 <div id="home"></div>
+
+<!-- DETAIL -->
+<div id="detail" class="hidden">
+<h2 id="dTitle"></h2>
+<p id="dDesc"></p>
+<div class="btn" onclick="back()">⬅️ Kembali</div>
+</div>
 
 <!-- PROFILE -->
 <div id="profile" class="hidden">
 <h2>👤 Admin Hiro</h2>
-<p>Status: Premium 😎</p>
+<p>Status: Free</p>
+<div class="btn" onclick="upgrade()">Upgrade Premium</div>
 </div>
 
 <!-- NAVBAR -->
@@ -77,26 +100,30 @@ img{width:100%;border-radius:10px}
 
 /* LOGIN */
 function login(){
- let email = document.getElementById("u").value;
- let pass = document.getElementById("p").value;
-
- if(email === "Ruruwanggy@gmail.com" && pass === "ruru"){
+ if(document.getElementById("u").value=="Hiro"){
   document.getElementById("login").style.display="none";
   document.getElementById("app").classList.remove("hidden");
- } else {
-  alert("Login gagal");
  }
 }
 
 /* SIDEBAR */
 function toggleMenu(){
  let s = document.getElementById("sidebar");
- s.style.left = (s.style.left === "0px") ? "-250px" : "0px";
+ s.style.left = (s.style.left=="0px") ? "-250px" : "0px";
 }
 
-/* PREMIUM */
-function premium(){
- alert("🔥 Premium aktif!\nStreaming tanpa iklan 😎");
+/* DETAIL */
+function detail(t,d){
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("detail").classList.remove("hidden");
+ document.getElementById("dTitle").innerText=t;
+ document.getElementById("dDesc").innerText=d;
+}
+
+/* BACK */
+function back(){
+ document.getElementById("detail").classList.add("hidden");
+ document.getElementById("home").classList.remove("hidden");
 }
 
 /* FAVORIT */
@@ -112,6 +139,14 @@ function showFav(){
  alert("Favorit: "+f.join(", "));
 }
 
+/* NAV */
+function show(page){
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("profile").classList.add("hidden");
+ document.getElementById("detail").classList.add("hidden");
+ document.getElementById(page).classList.remove("hidden");
+}
+
 /* SEARCH */
 function searchAnime(q){
  let cards = document.querySelectorAll(".card");
@@ -124,31 +159,23 @@ function searchAnime(q){
  });
 }
 
-/* WATCH */
-function watch(name){
- alert("🎬 Memutar "+name);
+/* PREMIUM */
+function upgrade(){
+ alert("Premium aktif 😎 (dummy dulu)");
 }
 
-/* AUTO GENERATE ANIME */
+/* AUTO ANIME LIST */
 let home = document.getElementById("home");
 
-for(let i=1;i<=50;i++){
+for(let i=1;i<=100;i++){
  let div = document.createElement("div");
  div.className="card";
  div.innerHTML = `
-  <img src="https://picsum.photos/40${i}/200">
-  <h3>Anime Episode ${i}</h3>
-  <div class="btn" onclick="watch('Anime Episode ${i}')">🎬 Tonton</div>
+  <img src="https://picsum.photos/400/200?random=${i}">
+  <h3 onclick="detail('Anime ${i}','Deskripsi Anime ${i}')">Anime ${i}</h3>
   <div class="btn" onclick="fav('Anime ${i}')">❤️ Favorit</div>
  `;
  home.appendChild(div);
-}
-
-/* NAV */
-function show(page){
- document.getElementById("home").classList.add("hidden");
- document.getElementById("profile").classList.add("hidden");
- document.getElementById(page).classList.remove("hidden");
 }
 
 </script>
