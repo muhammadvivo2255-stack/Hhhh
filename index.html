@@ -3,7 +3,9 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HiroNime</title>
-
+<div class="header">
+☰ <span onclick="toggleMenu()">🔥 HiroNime</span>
+</div>
 <style>
 body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 .header{padding:15px;font-size:20px;font-weight:bold}
@@ -16,7 +18,13 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 img{width:100%;border-radius:10px}
 </style>
 </head>
-
+<div id="sidebar" style="position:fixed;left:-250px;top:0;width:250px;height:100%;background:#111;padding:20px;transition:0.3s;z-index:999">
+  <h2>🔥 HiroNime</h2>
+  <p onclick="show('home')">🏠 Home</p>
+  <p onclick="showFav()">❤️ Favorit</p>
+  <p onclick="show('profile')">👤 Profile</p>
+  <p onclick="premium()">👑 Premium</p>
+</div>
 <body>
 
 <div class="header">🔥 HiroNime</div>
