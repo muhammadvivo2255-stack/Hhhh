@@ -3,12 +3,10 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HiroNime</title>
-<div class="header">
-☰ <span onclick="toggleMenu()">🔥 HiroNime</span>
-</div>
+
 <style>
 body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
-.header{padding:15px;font-size:20px;font-weight:bold}
+.header{padding:15px;font-size:20px;background:#111}
 .search{margin:10px;padding:10px;width:90%;border-radius:8px;border:none}
 .card{background:#1e1e1e;margin:10px;padding:15px;border-radius:10px}
 .btn{background:#ff2e63;padding:8px;border-radius:8px;margin-top:8px;text-align:center}
@@ -16,18 +14,35 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 .nav div{flex:1;text-align:center;padding:10px}
 .hidden{display:none}
 img{width:100%;border-radius:10px}
+
+/* SIDEBAR */
+#sidebar{
+ position:fixed;
+ left:-250px;
+ top:0;
+ width:250px;
+ height:100%;
+ background:#111;
+ padding:20px;
+ transition:0.3s;
+ z-index:999;
+}
 </style>
 </head>
-<div id="sidebar" style="position:fixed;left:-250px;top:0;width:250px;height:100%;background:#111;padding:20px;transition:0.3s;z-index:999">
+
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
   <h2>🔥 HiroNime</h2>
   <p onclick="show('home')">🏠 Home</p>
   <p onclick="showFav()">❤️ Favorit</p>
   <p onclick="show('profile')">👤 Profile</p>
   <p onclick="premium()">👑 Premium</p>
 </div>
-<body>
 
-<div class="header">🔥 HiroNime</div>
+<!-- HEADER -->
+<div class="header" onclick="toggleMenu()">☰ HiroNime</div>
 
 <!-- LOGIN -->
 <div id="login">
@@ -39,36 +54,9 @@ img{width:100%;border-radius:10px}
 <!-- APP -->
 <div id="app" class="hidden">
 
-<input class="search" placeholder="Search anime..." onkeyup="searchAnime(this.value)">
+<input class="search" placeholder="Cari anime..." onkeyup="searchAnime(this.value)">
 
-<div id="home">
-
-<div class="card" data-name="rezero">
-<img src="https://picsum.photos/400/200">
-<h3 onclick="detail('Re:Zero','Anime isekai sedih')">Re:Zero</h3>
-<div class="btn" onclick="fav('Re:Zero')">❤️ Favorit</div>
-</div>
-
-<div class="card" data-name="aot">
-<img src="https://picsum.photos/401/200">
-<h3 onclick="detail('Attack on Titan','Anime perang brutal')">Attack on Titan</h3>
-<div class="btn" onclick="fav('AOT')">❤️ Favorit</div>
-</div>
-
-<div class="card" data-name="kimetsu">
-<img src="https://picsum.photos/402/200">
-<h3 onclick="detail('Demon Slayer','Anime action keren')">Demon Slayer</h3>
-<div class="btn" onclick="fav('Kimetsu')">❤️ Favorit</div>
-</div>
-
-</div>
-
-<!-- DETAIL -->
-<div id="detail" class="hidden">
-<h2 id="dTitle"></h2>
-<p id="dDesc"></p>
-<div class="btn" onclick="back()">⬅️ Kembali</div>
-</div>
+<div id="home"></div>
 
 <!-- PROFILE -->
 <div id="profile" class="hidden">
@@ -86,6 +74,8 @@ img{width:100%;border-radius:10px}
 </div>
 
 <script>
+
+/* LOGIN */
 function login(){
  let email = document.getElementById("u").value;
  let pass = document.getElementById("p").value;
@@ -98,18 +88,18 @@ function login(){
  }
 }
 
-function detail(t,d){
- document.getElementById("home").classList.add("hidden");
- document.getElementById("detail").classList.remove("hidden");
- document.getElementById("dTitle").innerText=t;
- document.getElementById("dDesc").innerText=d;
+/* SIDEBAR */
+function toggleMenu(){
+ let s = document.getElementById("sidebar");
+ s.style.left = (s.style.left === "0px") ? "-250px" : "0px";
 }
 
-function back(){
- document.getElementById("detail").classList.add("hidden");
- document.getElementById("home").classList.remove("hidden");
+/* PREMIUM */
+function premium(){
+ alert("🔥 Premium aktif!\nStreaming tanpa iklan 😎");
 }
 
+/* FAVORIT */
 function fav(name){
  let f = JSON.parse(localStorage.getItem("fav")||"[]");
  f.push(name);
@@ -117,28 +107,50 @@ function fav(name){
  alert("Ditambah ke favorit");
 }
 
-function show(page){
- document.getElementById("home").classList.add("hidden");
- document.getElementById("profile").classList.add("hidden");
- document.getElementById("detail").classList.add("hidden");
- document.getElementById(page).classList.remove("hidden");
-}
-
 function showFav(){
  let f = JSON.parse(localStorage.getItem("fav")||"[]");
  alert("Favorit: "+f.join(", "));
 }
 
+/* SEARCH */
 function searchAnime(q){
  let cards = document.querySelectorAll(".card");
  cards.forEach(c=>{
-  if(c.dataset.name.includes(q.toLowerCase())){
+  if(c.innerText.toLowerCase().includes(q.toLowerCase())){
     c.style.display="block";
   }else{
     c.style.display="none";
   }
  });
 }
+
+/* WATCH */
+function watch(name){
+ alert("🎬 Memutar "+name);
+}
+
+/* AUTO GENERATE ANIME */
+let home = document.getElementById("home");
+
+for(let i=1;i<=50;i++){
+ let div = document.createElement("div");
+ div.className="card";
+ div.innerHTML = `
+  <img src="https://picsum.photos/40${i}/200">
+  <h3>Anime Episode ${i}</h3>
+  <div class="btn" onclick="watch('Anime Episode ${i}')">🎬 Tonton</div>
+  <div class="btn" onclick="fav('Anime ${i}')">❤️ Favorit</div>
+ `;
+ home.appendChild(div);
+}
+
+/* NAV */
+function show(page){
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("profile").classList.add("hidden");
+ document.getElementById(page).classList.remove("hidden");
+}
+
 </script>
 
 </body>
