@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HiroNime</title>
+<title>HiroNime PRO</title>
 
 <style>
 body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
@@ -18,7 +18,6 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
  justify-content:center;
  height:100vh;
 }
-
 #login input{
  width:80%;
  padding:12px;
@@ -26,7 +25,6 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
  border-radius:8px;
  border:none;
 }
-
 #login button{
  width:85%;
  padding:12px;
@@ -34,7 +32,6 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
  border-radius:8px;
  background:#ff2e63;
  color:white;
- font-size:16px;
 }
 
 /* SEARCH */
@@ -64,6 +61,9 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
  z-index:999;
 }
 
+/* VIDEO */
+iframe{width:100%;height:200px;border:none;border-radius:10px}
+
 /* HIDDEN */
 .hidden{display:none}
 </style>
@@ -85,7 +85,7 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 <!-- LOGIN -->
 <div id="login">
 <h2>🔥 Login HiroNime</h2>
-<input id="u" placeholder="User / Email">
+<input id="u" placeholder="Email">
 <input id="p" type="password" placeholder="Password">
 <button onclick="login()">Login</button>
 </div>
@@ -93,7 +93,7 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 <!-- APP -->
 <div id="app" class="hidden">
 
-<div class="header">🔥 HiroNime</div>
+<div class="header">🔥 HiroNime PRO</div>
 
 <input class="search" placeholder="Cari anime..." onkeyup="searchAnime(this.value)">
 
@@ -103,6 +103,9 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 <!-- DETAIL -->
 <div id="detail" class="hidden">
 <h2 id="dTitle"></h2>
+
+<iframe id="video" src=""></iframe>
+
 <p id="dDesc"></p>
 <div class="btn" onclick="back()">⬅️ Kembali</div>
 </div>
@@ -110,11 +113,11 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 <!-- PROFILE -->
 <div id="profile" class="hidden">
 <h2>👤 Admin Hiro</h2>
-<p>Status: Free</p>
+<p id="status">Status: Free</p>
 <div class="btn" onclick="upgrade()">Upgrade Premium</div>
 </div>
 
-<!-- NAVBAR -->
+<!-- NAV -->
 <div class="nav">
 <div onclick="show('home')">🏠</div>
 <div onclick="showFav()">❤️</div>
@@ -125,8 +128,15 @@ body{margin:0;background:#0d0d0d;color:white;font-family:sans-serif}
 
 <script>
 
+/* AUTO LOGIN */
+if(localStorage.getItem("login")){
+ document.getElementById("login").style.display="none";
+ document.getElementById("app").classList.remove("hidden");
+}
+
 /* LOGIN */
 function login(){
+ localStorage.setItem("login",true);
  document.getElementById("login").style.display="none";
  document.getElementById("app").classList.remove("hidden");
 }
@@ -137,12 +147,16 @@ function toggleMenu(){
  s.style.left = (s.style.left=="0px") ? "-250px" : "0px";
 }
 
-/* DETAIL */
+/* DETAIL + VIDEO */
 function detail(t,d){
  document.getElementById("home").classList.add("hidden");
  document.getElementById("detail").classList.remove("hidden");
  document.getElementById("dTitle").innerText=t;
  document.getElementById("dDesc").innerText=d;
+
+ // VIDEO RANDOM (YT embed)
+ document.getElementById("video").src =
+ "https://www.youtube.com/embed/dQw4w9WgXcQ";
 }
 
 /* BACK */
@@ -186,18 +200,25 @@ function searchAnime(q){
 
 /* PREMIUM */
 function upgrade(){
- alert("Premium aktif 😎 (dummy dulu)");
+ localStorage.setItem("premium",true);
+ document.getElementById("status").innerText="Status: Premium 😎";
+ alert("Premium aktif!");
+}
+
+/* LOAD PREMIUM */
+if(localStorage.getItem("premium")){
+ document.getElementById("status").innerText="Status: Premium 😎";
 }
 
 /* AUTO ANIME */
 let home = document.getElementById("home");
 
-for(let i=1;i<=50;i++){
+for(let i=1;i<=100;i++){
  let div = document.createElement("div");
  div.className="card";
  div.innerHTML = `
   <img src="https://picsum.photos/400/200?random=${i}">
-  <h3 onclick="detail('Anime ${i}','Deskripsi Anime ${i}')">Anime ${i}</h3>
+  <h3 onclick="detail('Anime ${i}','Anime keren nomor ${i}')">Anime ${i}</h3>
   <div class="btn" onclick="fav('Anime ${i}')">❤️ Favorit</div>
  `;
  home.appendChild(div);
